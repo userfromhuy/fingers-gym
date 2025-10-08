@@ -11,7 +11,7 @@ function sendResponse(res, end, statusCode = 200) {
   res.end(JSON.stringify(end));
 }
 
-const getRandomWords = async (res, count = 50) => {
+const getRandomWords = async (res, count = 30) => {
   let array = [];
   try {
     const json = await fs.readFile('../../public/words-en.json', 'utf-8');
@@ -41,9 +41,9 @@ http
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
     const url = new URL(req.url, `http://localhost:${PORT}`);
-
+    console.log(url)
     if (url.pathname === '/get') {
-      return getRandomWords(res);
+      return getRandomWords(res, url.searchParams.get('getWords'));
     }
 
     return sendResponse(
