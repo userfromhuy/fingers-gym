@@ -32,7 +32,7 @@ const fetchWords = async (): Promise<string[]> => {
     return data.array_words;
   } catch (err) {
     console.log('Твой node-server.js не отвечает');
-    return ['не удалось дернуть слова с API:(']
+    return ['не удалось дернуть слова с API:('];
   }
 };
 
