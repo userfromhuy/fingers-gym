@@ -1,11 +1,6 @@
 <template>
   <div class="center">
-    <span
-      v-for="(char, index) of arrChars"
-      @click="hundler(char, index)"
-      ref="spanElement"
-      :key="index"
-    >
+    <span v-for="(char, index) of arrChars" ref="spanElement" :key="index">
       {{ char }}
     </span>
   </div>
@@ -14,25 +9,40 @@
 <script lang="ts" setup>
 import { ref, computed, useTemplateRef, onMounted, onUnmounted } from 'vue';
 
-const word = ref<string>('privet bebebebebe i have eat cupcakes');
-const arrChars = computed(() => word.value.split(''));
+const word = ref<string[]>([]);
+const arrChars = computed(() => word.value.join(' '));
 const count = ref<number>(0);
 
 const spanElement = useTemplateRef<HTMLElement[]>('spanElement');
 
-const colorChar = (char: string) => {
-  const currentSPAN: HTMLElement = spanElement.value[count.value];
+const colorChar = (char: string): void => {
+  if (count.value >= spanElement.value.length) return;
+  const currentSPAN = spanElement.value[count.value];
   if (currentSPAN.innerText === char) {
     currentSPAN.style.color = 'wheat';
     count.value++;
   }
 };
 
-onMounted(() => {
-  window.addEventListener('keydown', (keydown) => colorChar(keydown.key));
+const keyHandler = (keydown: KeyboardEvent) => colorChar(keydown.key);
+const fetchWords = async (): Promise<string[]> => {
+  try {
+    const res = await fetch('http://localhost:3431/get?getWords=true');
+    const data = await res.json();
+    return data.array_words;
+  } catch (err) {
+    console.log('Твой node-server.js не отвечает');
+    return ['не удалось дернуть слова с API:('];
+  }
+};
+
+onMounted(async () => {
+  window.addEventListener('keydown', keyHandler);
+  const words: string[] = await fetchWords();
+  word.value = words;
 });
 onUnmounted(() => {
-  window.removeEventListener('keydown', (keydown) => colorChar(keydown.key));
+  window.removeEventListener('keydown', keyHandler);
 });
 </script>
 
