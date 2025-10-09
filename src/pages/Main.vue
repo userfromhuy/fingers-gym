@@ -4,9 +4,11 @@
       {{ char }}
     </span>
   </div>
+  <SettingsMenu />
 </template>
 
 <script lang="ts" setup>
+import SettingsMenu from '@/widgets/SettingsMenu/ui/SettingsMenu.vue';
 import {
   ref,
   computed,
@@ -15,14 +17,6 @@ import {
   onUnmounted,
   watch,
 } from 'vue';
-import { counter } from '../stores/settings.store';
-
-const store = counter()
-store.count = 7
-console.log(store.doubleCount)
-store.increment()
-console.log(store.count)
-
 
 const word = ref<string[]>([]);
 const arrChars = computed(() => word.value.join(' '));
