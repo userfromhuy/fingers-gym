@@ -1,12 +1,27 @@
 <template>
-  <div class="center" :key="refetch">
-    <span v-for="(char, index) of arrChars" ref="spanElement" :key="index">
+  <div
+    @mouseover="isShow = true"
+    @mouseleave="isShow = false"
+    class="center"
+    :key="refetch"
+  >
+    <span
+      v-for="(char, index) of arrChars"
+      ref="spanElement"
+      :key="index"
+      :style="{ visibility: isShow ? 'hidden' : 'visible' }"
+    >
       {{ char }}
     </span>
+
+    <SettingsMenu :style="{ visibility: !isShow ? 'hidden' : 'visible' }" />
   </div>
 </template>
 
 <script lang="ts" setup>
+import SettingsMenu from '@/widgets/SettingsMenu/ui/SettingsMenu.vue';
+import { useUserSettingsStore } from '@/widgets/SettingsMenu/store/UserSettingsStore.ts';
+const store = useUserSettingsStore();
 import {
   ref,
   computed,
@@ -15,19 +30,12 @@ import {
   onUnmounted,
   watch,
 } from 'vue';
-import { counter } from '../stores/settings.store';
-
-const store = counter()
-store.count = 7
-console.log(store.doubleCount)
-store.increment()
-console.log(store.count)
-
 
 const word = ref<string[]>([]);
 const arrChars = computed(() => word.value.join(' '));
 const count = ref<number>(0);
 const refetch = ref<number>(0);
+const isShow = ref<boolean>(false);
 
 const spanElement = useTemplateRef<HTMLElement[]>('spanElement');
 
@@ -38,7 +46,10 @@ const colorChar = (char: string): void => {
   }
   const currentSPAN = spanElement.value[count.value];
   if (currentSPAN.innerText === char) {
-    currentSPAN.style.color = 'gray';
+    currentSPAN.style.color = store.color;
+    count.value++;
+  } else if (store.mode === 'normal') {
+    currentSPAN.style.color = 'red';
     count.value++;
   }
 };
