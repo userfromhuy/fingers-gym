@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import { UserInterfaceState } from "../types/SettingsType.js";
+import { UserInterfaceState } from "../types/SettingsType.ts";
 
 export const useUserSettingsStore = defineStore('user settings', () => {
   const mode = ref<UserInterfaceState['mode']['value']>('casual')

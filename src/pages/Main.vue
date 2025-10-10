@@ -20,10 +20,8 @@
 
 <script lang="ts" setup>
 import SettingsMenu from '@/widgets/SettingsMenu/ui/SettingsMenu.vue';
-import { useUserSettingsStore } from '@/widgets/SettingsMenu/store/UserSettingsStore.ts'
-const store = useUserSettingsStore()
-console.log(store.mode)
-console.log(store.color)
+import { useUserSettingsStore } from '@/widgets/SettingsMenu/store/UserSettingsStore.ts';
+const store = useUserSettingsStore();
 import {
   ref,
   computed,
@@ -48,7 +46,10 @@ const colorChar = (char: string): void => {
   }
   const currentSPAN = spanElement.value[count.value];
   if (currentSPAN.innerText === char) {
-    currentSPAN.style.color = store.color
+    currentSPAN.style.color = store.color;
+    count.value++;
+  } else if (store.mode === 'normal') {
+    currentSPAN.style.color = 'red';
     count.value++;
   }
 };
